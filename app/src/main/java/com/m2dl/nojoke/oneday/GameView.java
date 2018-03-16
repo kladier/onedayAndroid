@@ -29,6 +29,8 @@ import com.m2dl.nojoke.oneday.entities.State;
 import java.util.Random;
 
 public class GameView extends SurfaceView implements Runnable, SensorEventListener {
+
+    private final short NB_ROCKS = 2;
     
     private SensorManager sensorManager;
     private Sensor accelerometer;
@@ -102,9 +104,9 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         boom = new Boom(context);
 
         //initializing the Rock class object
-        rocks = new Rock[3];
+        rocks = new Rock[NB_ROCKS];
 
-        for(int i = 0; i < 3 ; i++) {
+        for(int i = 0; i < NB_ROCKS ; i++) {
             rocks[i] = new Rock(context, screenX, screenY);
         }
 
@@ -187,7 +189,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
 
         //updating the Rock coordinates
-        for(int r = 0; r < 3 ; r++) {
+        for(int r = 0; r < NB_ROCKS ; r++) {
             rocks[r].update(player.getSpeed());
             //checking for a collision between player and a Rock
             if (Rect.intersects(player.getDetectCollision(), rocks[r].getDetectCollision())) {
@@ -302,7 +304,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             );
 
             //drawing friends image
-            for( int i = 0; i <3 ; i++) {
+            for( int i = 0; i <NB_ROCKS ; i++) {
                 Rock rock = rocks[i];
                 canvas.drawBitmap(
                         rock.getBitmap(),
@@ -399,6 +401,10 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         } else {
             return false;
         }
+    }
+
+    public short getNbRocks() {
+        return this.NB_ROCKS;
     }
 }
 

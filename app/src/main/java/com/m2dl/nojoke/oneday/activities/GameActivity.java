@@ -114,7 +114,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             float illuminance = event.values[0];
 
             if (illuminance < 10 ) {
-                for(int i = 0; i < 3; i++) {
+                for(int i = 0; i < gameView.getNbRocks(); i++) {
                     gameView.getRock(i).speed += 5;
                 }
             }
