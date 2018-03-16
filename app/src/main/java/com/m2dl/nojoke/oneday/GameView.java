@@ -29,11 +29,11 @@ import com.m2dl.nojoke.oneday.entities.State;
 import java.util.Random;
 
 public class GameView extends SurfaceView implements Runnable, SensorEventListener {
-
+    
     private SensorManager sensorManager;
     private Sensor accelerometer;
 
-    private Bitmap backgroundBitmap;
+    private Bitmap backgroundBitmap, earthQuakeEffect;
 
     volatile boolean playing;
     private Thread gameThread = null;
@@ -154,7 +154,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         score++;
 
         if (earthQuakeHappend()) {
-            earthQuake = new EarthQuake();
+            earthQuake = new EarthQuake(context);
             player.setState(State.SAVE_HIM);
         }
 
@@ -228,10 +228,10 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
         if (earthQuake != null && earthQuake.isFinish()) {
             if (player.getState() != State.SAFE) {
-                Log.d("earthQuake", "earthQuake kill the player");
                 playing = false;
                 isGameOver = true;
             }
+            earthQuake = null;
         }
     }
 
@@ -275,6 +275,10 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     Rock.getY(),
                     paint
             );
+
+            if (earthQuake != null && (!earthQuake.isFinish() && player.getState() == State.SAVE_HIM)) {
+                canvas.drawBitmap(earthQuake.getBitmap(), 0, 0, paint);
+            }
 
             //draw game Over when the game is over
             if(isGameOver){

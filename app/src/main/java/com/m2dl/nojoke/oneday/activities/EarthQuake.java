@@ -1,12 +1,21 @@
 package com.m2dl.nojoke.oneday.activities;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.m2dl.nojoke.oneday.R;
+
 public class EarthQuake {
 
+    private final Bitmap earthQuakeEffect;
     private float timeEarthQuake = 5.0f;
     private boolean finish;
     private long tStart;
 
-    public EarthQuake() {
+    public EarthQuake(Context context) {
+        earthQuakeEffect = BitmapFactory.decodeResource(context.getResources(), R.drawable.earthquake_effect);
+
         finish = false;
         tStart = System.currentTimeMillis();
     }
@@ -30,4 +39,9 @@ public class EarthQuake {
     public void setTimeEarthQuake(float timeEarthQuake) {
         this.timeEarthQuake = timeEarthQuake;
     }
+
+    public Bitmap getBitmap() {
+        return earthQuakeEffect;
+    }
+
 }
