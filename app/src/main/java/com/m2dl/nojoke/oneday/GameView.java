@@ -77,7 +77,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     //defining a boom object to display blast
     private Boom boom;
 
-    //the mediaplayer objects to configure the background music
+    //the mediaplayer objects to configure the background gameon
     static MediaPlayer gameOnsound;
 
     private EarthQuake earthQuake;
@@ -122,6 +122,13 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
        highScore[1] = sharedPreferences.getInt("score2",0);
        highScore[2] = sharedPreferences.getInt("score3",0);
        highScore[3] = sharedPreferences.getInt("score4",0);
+
+        //initializing the media players for the game sounds
+       gameOnsound = MediaPlayer.create(context,R.raw.gameon);
+
+        //starting the gameon to be played across the game
+        gameOnsound.start();
+
     }
 
     @Override
@@ -170,57 +177,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     boom.setX(bitcoin.getX());
                     boom.setY(bitcoin.getY());
 
-                    score += 10;
-
                     bitcoin.setX(-200);
-                }
-
-                else{// the condition where player misses the enemy
-
-                    //if the enemy has just entered
-                    if(flag){
-
-                        //if player's x coordinate is equal to bitcoin's y coordinate
-                        if(player.getDetectCollision().exactCenterX()>= bitcoin.getDetectCollision().exactCenterX()){
-
-                            //increment countMisses
-                            countMisses++;
-
-                            //setting the flag false so that the else part is executed only when new enemy enters the screen
-                            flag = false;
-
-                            //if no of Misses is equal to 3, then game is over.
-                            if(countMisses==3){
-
-                                //setting playing false to stop the game.
-                                playing = false;
-                                isGameOver = true;
-
-                                //Assigning the scores to the highscore integer array
-                                for(int i=0;i<4;i++){
-                                    if(highScore[i]<score){
-
-                                        final int finalI = i;
-                                        highScore[i] = score;
-                                        break;
-                                    }
-                                }
-
-                                //storing the scores through shared Preferences
-                                SharedPreferences.Editor e = sharedPreferences.edit();
-
-                                for(int i=0;i<4;i++){
-
-                                    int j = i+1;
-                                    e.putInt("score"+j,highScore[i]);
-                                }
-                                e.apply();
-
-                            }
-
-                        }
-                        }
-
                 }
 
 
@@ -237,6 +194,11 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     playing = false;
                     //setting the isGameOver true as the game is over
                     isGameOver = true;
+
+
+
+                    //stopping the gameon gameon
+                    gameOnsound.stop();
 
                 //Assigning the scores to the highscore integer array
                     for(int i=0;i<4;i++){
@@ -348,6 +310,12 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         gameThread = new Thread(this);
         gameThread.start();
     }
+
+    //stop the gameon on exit
+    public static void stopMusic(){
+        gameOnsound.stop();
+    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
