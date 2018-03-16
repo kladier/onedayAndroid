@@ -9,7 +9,7 @@ import com.m2dl.nojoke.oneday.R;
 public class EarthQuake {
 
     private final Bitmap earthQuakeEffect;
-    private float timeEarthQuake = 5.0f;
+    private float timeEarthQuake = 3.0f;
     private boolean finish;
     private long tStart;
 

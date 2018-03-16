@@ -42,7 +42,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private float forceOnPlayer;
 
     //a screenX holder
-    int screenX;
+    int screenX, screenY;
 
     //context to be used in onTouchEvent to cause the activity transition from GameAvtivity to MainActivity.
     Context context;
@@ -113,6 +113,8 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         this.screenX = screenX;
 
         isGameOver = false;
+
+        this.screenY = screenY;
 
         //initializing shared Preferences
         sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME", Context.MODE_PRIVATE);
@@ -264,6 +266,10 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             // draw background
             canvas.drawBitmap(backgroundBitmap, 0, 0, paint);
 
+            if (earthQuake != null && (!earthQuake.isFinish() && player.getState() == State.SAVE_HIM)) {
+                canvas.drawBitmap(earthQuake.getBitmap(), screenX/4, screenY/2, paint);
+            }
+
             // draw digger
             canvas.drawBitmap(
                     player.getBitmap(),
@@ -298,9 +304,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     paint
             );
 
-            if (earthQuake != null && (!earthQuake.isFinish() && player.getState() == State.SAVE_HIM)) {
-                canvas.drawBitmap(earthQuake.getBitmap(), 0, 0, paint);
-            }
 
             //draw game Over when the game is over
             if(isGameOver){
@@ -384,8 +387,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         int range = 100 - 0 + 1;
         int randomNum = rn.nextInt(range) + 0;
 
-        if (earthQuake == null && randomNum <= 50) {
-            Log.d("earthQuake", "earthQuake happened");
+        if (earthQuake == null && randomNum <= 10) {
             return true;
         } else {
             return false;
