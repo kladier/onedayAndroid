@@ -31,6 +31,8 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private SensorManager sensorManager;
     private Sensor accelerometer;
 
+    private Bitmap backgroundBitmap;
+
     volatile boolean playing;
     private Thread gameThread = null;
     private Player player;
@@ -85,6 +87,8 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
     public GameView(Context context, int screenX, int screenY, SensorManager sensorManager) {
         super(context);
+
+        backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
 
         setUpSensors(sensorManager);
         player = new Player(context, screenX, screenY);
@@ -174,7 +178,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     //displaying boom at that location
                     boom.setX(bitcoin.getX());
                     boom.setY(bitcoin.getY());
-
 
                     //playing a sound at the collision between player and the enemy
                     killedEnemysound.start();
@@ -291,16 +294,14 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         if (surfaceHolder.getSurface().isValid()) {
             canvas = surfaceHolder.lockCanvas();
 
-            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_menu);
-            canvas.drawBitmap(bitmap, 0, 0, paint);
-            paint.setColor(Color.WHITE);
-            paint.setTextSize(20);
+            //paint.setARGB(this.opacity, 255, 255, 255);
+            canvas.drawBitmap(backgroundBitmap, 0, 0, paint);
 
-            RectF rectF = new RectF();
-            Paint paintOpacity = new Paint();
-            paintOpacity.setARGB(this.opacity, 255, 255, 255);
-            rectF.set(0,0, getMeasuredWidth(), getMeasuredHeight());
-            canvas.drawRect(rectF, paintOpacity);
+//            RectF rectF = new RectF();
+//            Paint paintOpacity = new Paint();
+//            paintOpacity.setARGB(this.opacity, 255, 255, 255);
+//            rectF.set(0,0, getMeasuredWidth(), getMeasuredHeight());
+//            canvas.drawRect(rectF, paintOpacity);
 
             canvas.drawBitmap(
                     player.getBitmap(),

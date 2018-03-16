@@ -8,7 +8,7 @@
     android:paddingTop="150dp"
     android:orientation="vertical"
     tools:context="com.m2dl.nojoke.oneday.activities.HighScoreActivity"
-    android:background="@drawable/splash">
+    android:background="@drawable/background">
 
     <TextView
 
