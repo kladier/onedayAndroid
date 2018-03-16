@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.util.Log;
 
 import com.m2dl.nojoke.oneday.R;
 
@@ -15,7 +16,7 @@ public class Rock {
     private Bitmap bitmap;
     private int x;
     private int y;
-    private int speed = 1;
+    public int speed = 1;
 
     private int maxX;
     private int minX;
@@ -34,6 +35,7 @@ public class Rock {
         minY = 0;
         Random generator = new Random();
         speed = generator.nextInt(6) + 10;
+        Log.w("speed of rock", String.valueOf(speed));
         y = screenY;
         x = generator.nextInt(maxX) - bitmap.getWidth();
 

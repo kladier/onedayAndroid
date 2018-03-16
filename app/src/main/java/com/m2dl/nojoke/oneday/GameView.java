@@ -57,7 +57,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     //Shared Prefernces to store the High Scores
     SharedPreferences sharedPreferences;
 
-
     //to count the number of Misses
     int countMisses;
 
@@ -116,22 +115,15 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
         isGameOver = false;
 
-
         //initializing shared Preferences
         sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME", Context.MODE_PRIVATE);
-
 
         //initializing the array high scores with the previous values
        highScore[0] = sharedPreferences.getInt("score1",0);
        highScore[1] = sharedPreferences.getInt("score2",0);
        highScore[2] = sharedPreferences.getInt("score3",0);
        highScore[3] = sharedPreferences.getInt("score4",0);
-
     }
-
-
-
-
 
     @Override
     public void run() {
@@ -142,6 +134,13 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         }
     }
 
+    public Rock getRock() {
+        return this.Rock;
+    }
+
+    public Bitcoin getBitcoin() {
+        return this.bitcoin;
+    }
 
     private void update() {
 
@@ -161,10 +160,8 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
         //setting the flag true when the enemy just enters the screen
         if(bitcoin.getX()==screenX){
-
             flag = true;
         }
-
 
         bitcoin.update(player.getSpeed());
                 //if collision occurs with player
@@ -278,37 +275,30 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         }
     }
 
-    public void setOpacity(int opacity) {
-        this.opacity = opacity;
-    }
-
-
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             canvas = surfaceHolder.lockCanvas();
 
-            //paint.setARGB(this.opacity, 255, 255, 255);
+            // draw background
             canvas.drawBitmap(backgroundBitmap, 0, 0, paint);
 
+            // draw digger
             canvas.drawBitmap(
                     player.getBitmap(),
                     player.getX(),
                     player.getY(),
                     paint);
 
-
-                canvas.drawBitmap(
-                        bitcoin.getBitmap(),
-                        bitcoin.getX(),
-                        bitcoin.getY(),
-                        paint
-
-                );
+            // draw bitcoin
+            canvas.drawBitmap(
+                bitcoin.getBitmap(),
+                bitcoin.getX(),
+                bitcoin.getY(),
+                paint);
 
             //drawing the score on the game screen
             paint.setTextSize(30);
             canvas.drawText("Score:"+score,100,50,paint);
-
 
             //drawing boom image
             canvas.drawBitmap(
@@ -320,7 +310,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
             //drawing friends image
             canvas.drawBitmap(
-
                     Rock.getBitmap(),
                     Rock.getX(),
                     Rock.getY(),

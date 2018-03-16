@@ -39,7 +39,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_UI);
 
         //Getting display object
         Display display = getWindowManager().getDefaultDisplay();
@@ -111,23 +111,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             int maxLuminosity = 2000;
             float illuminance = event.values[0];
 
-            int percentageIlluminance = (int)illuminance*100/maxLuminosity;
-
-            int opacity = 128;
-
-            if (percentageIlluminance >= 0 && percentageIlluminance < 25) {
-                opacity = 255;
+            if (illuminance < 10 ) {
+                this.gameView.getRock().speed = this.gameView.getRock().speed+5;
             }
-            else if (percentageIlluminance >= 25 && percentageIlluminance < 50) {
-                opacity = 200;
+            else if (illuminance > 1000) {
+                this.gameView.getBitcoin().speed = this.gameView.getBitcoin().speed+5;
             }
-            else if (percentageIlluminance >= 50 && percentageIlluminance < 75) {
-                opacity = 100;
-            }
-            else {
-                opacity = 50;
-            }
-            gameView.setOpacity(opacity);
         }
     }
 

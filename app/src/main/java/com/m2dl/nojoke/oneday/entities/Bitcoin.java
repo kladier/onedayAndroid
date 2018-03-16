@@ -14,7 +14,7 @@ public class Bitcoin {
     private Bitmap bitmap;
     private int x;
     private int y;
-    private int speed = 1;
+    public int speed = 1;
 
     private int maxX;
     private int minX;
