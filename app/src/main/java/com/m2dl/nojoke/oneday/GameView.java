@@ -150,9 +150,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
     private void update() {
 
-        //incrementing score as time passes
-        score++;
-
         if (earthQuakeHappend()) {
             earthQuake = new EarthQuake(context);
             player.setState(State.SAVE_HIM);
@@ -173,6 +170,8 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                 //if collision occurs with player
                 if (Rect.intersects(player.getDetectCollision(), bitcoin.getDetectCollision())) {
 
+                    // score is increased by 10 points whenever the player hit a bitcoin
+                    score += 10;
                     //displaying boom at that location
                     boom.setX(bitcoin.getX());
                     boom.setY(bitcoin.getY());
@@ -181,8 +180,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                 }
 
 
-
-        //updating the Rock ships coordinates
+        //updating the Rock coordinates
         Rock.update(player.getSpeed());
                 //checking for a collision between player and a Rock
                 if(Rect.intersects(player.getDetectCollision(), Rock.getDetectCollision())){
@@ -230,6 +228,30 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             if (player.getState() != State.SAFE) {
                 playing = false;
                 isGameOver = true;
+
+                //stopping the gameon gameon
+                gameOnsound.stop();
+
+                //Assigning the scores to the highscore integer array
+                for (int i = 0; i < 4; i++) {
+
+                    if (highScore[i] < score) {
+
+                        final int finalI = i;
+                        highScore[i] = score;
+                        break;
+                    }
+
+
+                }
+                //storing the scores through shared Preferences
+                SharedPreferences.Editor e = sharedPreferences.edit();
+
+                for (int i = 0; i < 4; i++) {
+                    int j = i + 1;
+                    e.putInt("score" + j, highScore[i]);
+                }
+                e.apply();
             }
             earthQuake = null;
         }
@@ -360,13 +382,12 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private boolean earthQuakeHappend() {
         Random rn = new Random();
         int range = 100 - 0 + 1;
-        int randomNum =  rn.nextInt(range) + 0;
+        int randomNum = rn.nextInt(range) + 0;
 
         if (earthQuake == null && randomNum <= 50) {
             Log.d("earthQuake", "earthQuake happened");
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
