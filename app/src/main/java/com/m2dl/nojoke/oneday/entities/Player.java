@@ -18,7 +18,7 @@ public class Player {
 
     public Player(Context context, int screenX, int screenY) {
         widthScreen = screenX;
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.digger);
         x = (screenX / 2) - (bitmap.getWidth()/2);
         y = screenY / 4;
         speed = 1;

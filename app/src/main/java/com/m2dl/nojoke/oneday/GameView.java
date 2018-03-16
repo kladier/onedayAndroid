@@ -3,10 +3,13 @@ package com.m2dl.nojoke.oneday;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -64,7 +67,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
-    private Bitcoin enemies;
+    private Bitcoin bitcoin;
 
     //created a reference of the class Rock
     private Rock Rock;
@@ -92,7 +95,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         //initializing context
         this.context = context;
 
-        enemies = new Bitcoin(context,screenX,screenY);
+        bitcoin = new Bitcoin(context,screenX,screenY);
 
         //initializing boom object
         boom = new Boom(context);
@@ -158,25 +161,25 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         boom.setY(-250);
 
         //setting the flag true when the enemy just enters the screen
-        if(enemies.getX()==screenX){
+        if(bitcoin.getX()==screenX){
 
             flag = true;
         }
 
 
-        enemies.update(player.getSpeed());
+        bitcoin.update(player.getSpeed());
                 //if collision occurs with player
-                if (Rect.intersects(player.getDetectCollision(), enemies.getDetectCollision())) {
+                if (Rect.intersects(player.getDetectCollision(), bitcoin.getDetectCollision())) {
 
                     //displaying boom at that location
-                    boom.setX(enemies.getX());
-                    boom.setY(enemies.getY());
+                    boom.setX(bitcoin.getX());
+                    boom.setY(bitcoin.getY());
 
 
                     //playing a sound at the collision between player and the enemy
                     killedEnemysound.start();
 
-                    enemies.setX(-200);
+                    bitcoin.setX(-200);
                 }
 
                 else{// the condition where player misses the enemy
@@ -184,8 +187,8 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     //if the enemy has just entered
                     if(flag){
 
-                        //if player's x coordinate is equal to enemies's y coordinate
-                        if(player.getDetectCollision().exactCenterX()>=enemies.getDetectCollision().exactCenterX()){
+                        //if player's x coordinate is equal to bitcoin's y coordinate
+                        if(player.getDetectCollision().exactCenterX()>= bitcoin.getDetectCollision().exactCenterX()){
 
                             //increment countMisses
                             countMisses++;
@@ -287,8 +290,9 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             canvas = surfaceHolder.lockCanvas();
-            canvas.drawColor(Color.BLACK);
 
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_menu);
+            canvas.drawBitmap(bitmap, 0, 0, paint);
             paint.setColor(Color.WHITE);
             paint.setTextSize(20);
 
@@ -306,9 +310,9 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
 
                 canvas.drawBitmap(
-                        enemies.getBitmap(),
-                        enemies.getX(),
-                        enemies.getY(),
+                        bitcoin.getBitmap(),
+                        bitcoin.getX(),
+                        bitcoin.getY(),
                         paint
 
                 );

@@ -29,7 +29,7 @@ public class Bitcoin {
     private Rect detectCollision;
 
     public Bitcoin(Context context, int screenX, int screenY) {
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy);
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bitcoin);
         maxX = screenX;
         maxY = screenY;
         minX = 0;

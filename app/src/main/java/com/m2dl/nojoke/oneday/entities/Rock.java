@@ -27,7 +27,7 @@ public class Rock {
     private Rect detectCollision;
 
     public Rock(Context context, int screenX, int screenY) {
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.friend);
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone);
         maxX = screenX;
         maxY = screenY;
         minX = 0;

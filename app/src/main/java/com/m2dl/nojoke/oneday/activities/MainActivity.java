@@ -15,10 +15,7 @@ import com.m2dl.nojoke.oneday.R;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
-
-    //image button
     private ImageButton buttonPlay;
-    // the high score button
     private ImageButton buttonScore;
 
     @Override

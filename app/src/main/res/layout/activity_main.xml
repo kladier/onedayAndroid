@@ -13,7 +13,7 @@
 
     <ImageButton
         android:id="@+id/buttonPlay"
-        android:layout_width="250dp"
+        android:layout_width="275dp"
         android:layout_height="150dp"
         android:layout_above="@+id/buttonScore"
         android:layout_centerHorizontal="true"
@@ -25,11 +25,11 @@
     <ImageButton
         android:id="@+id/buttonScore"
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/highscore" />
+        android:background="@drawable/button_highscore" />
 
     <ImageView
         android:id="@+id/imageView"
