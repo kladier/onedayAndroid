@@ -26,44 +26,28 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        //setting the orientation to landscape
-        // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-        //getting the button
         buttonPlay = findViewById(R.id.buttonPlay);
-
-        //initializing the highscore button
         buttonScore = findViewById(R.id.buttonScore);
 
-        //setting the on click listener to high score button
         buttonScore.setOnClickListener(this);
-        //setting the on click listener to play now button
         buttonPlay.setOnClickListener(this);
     }
 
-
     @Override
-    public void onClick(View v) {
-
-        if(v==buttonPlay){
-
-            //the transition from MainActivity to GameActivity
+    public void onClick(View view) {
+        if(view==buttonPlay){
             startActivity(new Intent(MainActivity.this, GameActivity.class));
         }
-        if(v==buttonScore){
-            //the transition from MainActivity to HighScoreActivity activity
+        if(view==buttonScore){
             startActivity(new Intent(MainActivity.this,HighScoreActivity.class));
         }
-
-
     }
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to exit?")
+        builder.setMessage("You got enough bitcoins for now ?")
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Yes, let me go ..", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         GameView.stopMusic();
@@ -74,16 +58,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         finish();
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton("I want to dig more !", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 });
         AlertDialog alert = builder.create();
         alert.show();
-
     }
-
-
-
 }
