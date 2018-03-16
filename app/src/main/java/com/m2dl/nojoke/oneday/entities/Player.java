@@ -23,10 +23,10 @@ public class Player {
     private Rect detectCollision;
 
     public Player(Context context, int screenX, int screenY) {
-        x = screenX / 2;
-        y = 0;
-        speed = 1;
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
+        x = (screenX / 2) - (bitmap.getWidth()/2);
+        y = screenY / 4;
+        speed = 1;
         maxY = screenY - bitmap.getHeight();
         minY = 0;
         boosting = false;
@@ -44,29 +44,6 @@ public class Player {
     }
 
     public void update() {
-        if (boosting) {
-            speed += 2;
-        } else {
-            speed -= 5;
-        }
-
-        if (speed > MAX_SPEED) {
-            speed = MAX_SPEED;
-        }
-
-        if (speed < MIN_SPEED) {
-            speed = MIN_SPEED;
-        }
-
-        y -= speed + GRAVITY;
-
-        if (y < minY) {
-            y = minY;
-        }
-        if (y > maxY) {
-            y = maxY;
-        }
-
         //adding top, left, bottom and right to the rect object
         detectCollision.left = x;
         detectCollision.top = y;

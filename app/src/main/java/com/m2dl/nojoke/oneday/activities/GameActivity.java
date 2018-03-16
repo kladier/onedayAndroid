@@ -7,8 +7,16 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
+import android.view.Surface;
+import android.view.SurfaceView;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.m2dl.nojoke.oneday.GameView;
+import com.m2dl.nojoke.oneday.R;
+import com.m2dl.nojoke.oneday.widgets.GameWidgets;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -25,12 +33,22 @@ public class GameActivity extends AppCompatActivity {
         Point size = new Point();
         display.getSize(size);
 
+        GameWidgets gameWidgets = new GameWidgets(this, size.x, size.y);
+
+        LinearLayout gameWidgetsLayout = new LinearLayout(this);
+        gameWidgetsLayout.setMinimumHeight(size.y);
+        gameWidgetsLayout.addView(gameWidgets.getMoveLeftBtn());
+        gameWidgetsLayout.addView(gameWidgets.getMoveRightBtn());
+
         //Initializing game view object
         //this time we are also passing the screen size to the GameView constructor
         gameView = new GameView(this, size.x, size.y);
 
-        //adding it to contentview
-        setContentView(gameView);
+        FrameLayout game = new FrameLayout(this);
+
+        game.addView(gameView);
+        game.addView(gameWidgetsLayout);
+        setContentView(game);
     }
 
     //pausing the game when activity is paused
