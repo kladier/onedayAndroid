@@ -127,7 +127,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             else {
                 opacity = 50;
             }
-            Log.w("opacity : ", Integer.valueOf(opacity).toString());
             gameView.setOpacity(opacity);
         }
     }

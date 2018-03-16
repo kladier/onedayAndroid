@@ -13,6 +13,7 @@ public class Player {
     private int y;
     private int speed = 0;
     private int widthScreen;
+    private State state;
 
     private Rect detectCollision;
 
@@ -22,6 +23,7 @@ public class Player {
         x = (screenX / 2) - (bitmap.getWidth()/2);
         y = screenY / 4;
         speed = 1;
+        state = State.SAFE;
 
         detectCollision =  new Rect(x, y, bitmap.getWidth(), bitmap.getHeight());
     }
@@ -50,6 +52,15 @@ public class Player {
         }
     }
 
+    public boolean collide(float x, float y) {
+        if (x >= this.x && x < this.x + this.bitmap.getWidth()
+            && y >= this.y && y < this.y + this.bitmap.getHeight()) {
+            return true;
+        }
+
+        return false;
+    }
+
     //one more getter for getting the rect object
     public Rect getDetectCollision() {
         return detectCollision;
@@ -69,5 +80,13 @@ public class Player {
 
     public int getSpeed() {
         return speed;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 }

@@ -6,25 +6,27 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.graphics.RectF;
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.m2dl.nojoke.oneday.activities.EarthQuake;
 import com.m2dl.nojoke.oneday.activities.MainActivity;
 import com.m2dl.nojoke.oneday.effects.Boom;
 import com.m2dl.nojoke.oneday.entities.Rock;
 import com.m2dl.nojoke.oneday.entities.Player;
 import com.m2dl.nojoke.oneday.entities.Bitcoin;
+import com.m2dl.nojoke.oneday.entities.State;
+
+import java.util.Random;
 
 public class GameView extends SurfaceView implements Runnable, SensorEventListener {
 
@@ -76,6 +78,11 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
     //defining a boom object to display blast
     private Boom boom;
+
+    //the mediaplayer objects to configure the background music
+    static MediaPlayer gameOnsound;
+
+    private EarthQuake earthQuake;
 
     public GameView(Context context, int screenX, int screenY, SensorManager sensorManager) {
         super(context);
@@ -140,6 +147,11 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
         //incrementing score as time passes
         score++;
+
+        if (earthQuakeHappend()) {
+            earthQuake = new EarthQuake();
+            player.setState(State.SAVE_HIM);
+        }
 
         player.update(forceOnPlayer* FORCE_FACTOR);
 
@@ -252,6 +264,18 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     e.apply();
 
                 }
+
+        if (earthQuake != null) {
+            earthQuake.update();
+        }
+
+        if (earthQuake != null && earthQuake.isFinish()) {
+            if (player.getState() != State.SAFE) {
+                Log.d("earthQuake", "earthQuake kill the player");
+                playing = false;
+                isGameOver = true;
+            }
+        }
     }
 
     public void setOpacity(int opacity) {
@@ -265,11 +289,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
             //paint.setARGB(this.opacity, 255, 255, 255);
             canvas.drawBitmap(backgroundBitmap, 0, 0, paint);
-//            RectF rectF = new RectF();
-//            Paint paintOpacity = new Paint();
-//            paintOpacity.setARGB(this.opacity, 255, 255, 255);
-//            rectF.set(0,0, getMeasuredWidth(), getMeasuredHeight());
-//            canvas.drawRect(rectF, paintOpacity);
 
             canvas.drawBitmap(
                     player.getBitmap(),
@@ -345,12 +364,20 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-//if the game's over, tappin on game Over screen sends you to MainActivity
+        //if the game's over, tappin on game Over screen sends you to MainActivity
         if(isGameOver){
             if(motionEvent.getAction()== MotionEvent.ACTION_DOWN){
                 context.startActivity(new Intent(context,MainActivity.class));
             }
         }
+
+        if (earthQuake != null && !earthQuake.isFinish()) {
+            if (player.collide(motionEvent.getX(), motionEvent.getY())) {
+                Log.d("Player", "player is safe");
+                player.setState(State.SAFE);
+            }
+        }
+
         return true;
     }
 
@@ -369,6 +396,20 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         this.sensorManager = sensorManager;
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    private boolean earthQuakeHappend() {
+        Random rn = new Random();
+        int range = 100 - 0 + 1;
+        int randomNum =  rn.nextInt(range) + 0;
+
+        if (earthQuake == null && randomNum <= 50) {
+            Log.d("earthQuake", "earthQuake happened");
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
 
