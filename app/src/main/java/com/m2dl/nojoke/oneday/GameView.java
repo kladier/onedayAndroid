@@ -58,9 +58,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     //Shared Prefernces to store the High Scores
     SharedPreferences sharedPreferences;
 
-    //to count the number of Misses
-    int countMisses;
-
     //indicator that the enemy has just entered the game screen
     boolean flag ;
 
@@ -112,10 +109,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
         //setting the score to 0 initially
         score = 0;
-
-        //setting the countMisses to 0 initially
-        countMisses = 0;
-
         this.screenX = screenX;
 
         isGameOver = false;
@@ -187,7 +180,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     bitcoin.setX(-200);
                 }
 
-
         //updating the Rock coordinates
         for(int r = 0; r < NB_ROCKS ; r++) {
             rocks[r].update(player.getSpeed());
@@ -201,7 +193,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                 playing = false;
                 //setting the isGameOver true as the game is over
                 isGameOver = true;
-
 
                 //stopping the gameon gameon
                 gameOnsound.stop();
@@ -292,8 +283,8 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                 paint);
 
             //drawing the score on the game screen
-            paint.setTextSize(30);
-            canvas.drawText("Score:"+score,100,50,paint);
+            paint.setTextSize(35);
+            canvas.drawText("Score : "+score,100,50,paint);
 
             //drawing boom image
             canvas.drawBitmap(
