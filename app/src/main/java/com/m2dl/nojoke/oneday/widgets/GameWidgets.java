@@ -1,6 +1,7 @@
 package com.m2dl.nojoke.oneday.widgets;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.widget.Button;
 
 public class GameWidgets {
@@ -15,15 +16,14 @@ public class GameWidgets {
         moveLeftBtn.setWidth(300);
         moveLeftBtn.setHeight(60);
         moveLeftBtn.setText("LEFT");
-        moveLeftBtn.setX(500);
-        moveLeftBtn.setY(400);
+        moveLeftBtn.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL);
         //moveLeftBtn.setY(screenY - moveLeftBtn.getHeight() - 10);
 
         moveRightBtn.setWidth(300);
-        moveLeftBtn.setHeight(60);
+        moveRightBtn.setHeight(60);
         moveRightBtn.setText("RIGHT");
-        moveLeftBtn.setX(screenX - moveRightBtn.getWidth() - 10);
-        moveLeftBtn.setY(screenY - moveLeftBtn.getHeight() - 10);
+        moveRightBtn.setX(screenX - moveRightBtn.getWidth() - 10);
+        moveRightBtn.setY(screenY - moveRightBtn.getHeight() - 10);
     }
 
     public Button getMoveLeftBtn() {

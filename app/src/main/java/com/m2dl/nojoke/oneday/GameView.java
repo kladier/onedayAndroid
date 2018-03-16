@@ -11,8 +11,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.graphics.RectF;
 import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -33,10 +33,10 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private Player player;
     private final int FORCE_FACTOR = 3; // Increase the values read by the accelerometer
     private float forceOnPlayer;
+    private int opacity = 128;
 
     //a screenX holder
     int screenX;
-
 
     //context to be used in onTouchEvent to cause the activity transition from GameAvtivity to MainActivity.
     Context context;
@@ -138,16 +138,11 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
     @Override
     public void run() {
-
         while (playing) {
-
             update();
             draw();
             control();
-
         }
-
-
     }
 
 
@@ -276,14 +271,16 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     SharedPreferences.Editor e = sharedPreferences.edit();
 
                     for(int i=0;i<4;i++){
-
                         int j = i+1;
                         e.putInt("score"+j,highScore[i]);
                     }
                     e.apply();
 
                 }
+    }
 
+    public void setOpacity(int opacity) {
+        this.opacity = opacity;
     }
 
 
@@ -292,10 +289,14 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             canvas = surfaceHolder.lockCanvas();
             canvas.drawColor(Color.BLACK);
 
-
-
             paint.setColor(Color.WHITE);
             paint.setTextSize(20);
+
+            RectF rectF = new RectF();
+            Paint paintOpacity = new Paint();
+            paintOpacity.setARGB(this.opacity, 255, 255, 255);
+            rectF.set(0,0, getMeasuredWidth(), getMeasuredHeight());
+            canvas.drawRect(rectF, paintOpacity);
 
             canvas.drawBitmap(
                     player.getBitmap(),
@@ -325,11 +326,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     paint
             );
 
-
-
-
-
-
             //drawing friends image
             canvas.drawBitmap(
 
@@ -338,7 +334,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     Rock.getY(),
                     paint
             );
-
 
             //draw game Over when the game is over
             if(isGameOver){
@@ -350,7 +345,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             }
 
             surfaceHolder.unlockCanvasAndPost(canvas);
-
         }
     }
 
@@ -378,23 +372,19 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
     //stop the music on exit
     public static void stopMusic(){
-
         gameOnsound.stop();
     }
 
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        //Tappin on game Over screen to return to the MainActivity
+//if the game's over, tappin on game Over screen sends you to MainActivity
         if(isGameOver){
-
             if(motionEvent.getAction()== MotionEvent.ACTION_DOWN){
                 context.startActivity(new Intent(context,MainActivity.class));
             }
         }
-
         return true;
-
     }
 
 

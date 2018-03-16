@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.Surface;
 import android.view.SurfaceView;
 import android.widget.Button;
@@ -24,13 +26,20 @@ import com.m2dl.nojoke.oneday.GameView;
 import com.m2dl.nojoke.oneday.R;
 import com.m2dl.nojoke.oneday.widgets.GameWidgets;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements SensorEventListener{
 
     private GameView gameView;
+    private SensorManager sensorManager;
+    private Sensor lightSensor;
+    private FrameLayout game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_GAME);
 
         //Getting display object
         Display display = getWindowManager().getDefaultDisplay();
@@ -42,6 +51,7 @@ public class GameActivity extends AppCompatActivity {
         GameWidgets gameWidgets = new GameWidgets(this, size.x, size.y);
 
         LinearLayout gameWidgetsLayout = new LinearLayout(this);
+        gameWidgetsLayout.setGravity(Gravity.TOP|Gravity.CENTER);
         gameWidgetsLayout.setMinimumHeight(size.y);
 
         //Initializing game view object
@@ -50,7 +60,7 @@ public class GameActivity extends AppCompatActivity {
         SensorManager senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gameView = new GameView(this, size.x, size.y, senSensorManager);
 
-        FrameLayout game = new FrameLayout(this);
+        game = new FrameLayout(this);
 
         game.addView(gameView);
         game.addView(gameWidgetsLayout);
@@ -94,5 +104,37 @@ public class GameActivity extends AppCompatActivity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (gameView != null) {
+            int maxLuminosity = 2000;
+            float illuminance = event.values[0];
+
+            int percentageIlluminance = (int)illuminance*100/maxLuminosity;
+
+            int opacity = 128;
+
+            if (percentageIlluminance >= 0 && percentageIlluminance < 25) {
+                opacity = 255;
+            }
+            else if (percentageIlluminance >= 25 && percentageIlluminance < 50) {
+                opacity = 200;
+            }
+            else if (percentageIlluminance >= 50 && percentageIlluminance < 75) {
+                opacity = 100;
+            }
+            else {
+                opacity = 50;
+            }
+            Log.w("opacity : ", Integer.valueOf(opacity).toString());
+            gameView.setOpacity(opacity);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // we dont care
     }
 }
