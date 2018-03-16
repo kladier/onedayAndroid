@@ -42,10 +42,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_UI);
 
-        //Getting display object
         Display display = getWindowManager().getDefaultDisplay();
 
-        //Getting the screen resolution into point object
+        //Get the screen resolution
         Point size = new Point();
         display.getSize(size);
 
@@ -55,12 +54,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         gameWidgetsLayout.setGravity(Gravity.TOP|Gravity.CENTER);
         gameWidgetsLayout.setMinimumHeight(size.y);
 
-        //Initializing game view object
-        //this time we are also passing the screen size to the GameView constructor
-
         SensorManager senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gameView = new GameView(this, size.x, size.y, senSensorManager);
-
         game = new FrameLayout(this);
 
         game.addView(gameView);
@@ -68,14 +63,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         setContentView(game);
     }
 
-    //pausing the game when activity is paused
     @Override
     protected void onPause() {
         super.onPause();
         gameView.pause();
     }
 
-    //running the game when activity is resumed
     @Override
     protected void onResume() {
         super.onResume();
@@ -86,23 +79,21 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to exit?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        GameView.stopMusic();
-                        Intent startMain = new Intent(Intent.ACTION_MAIN);
-                        startMain.addCategory(Intent.CATEGORY_HOME);
-                        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(startMain);
-                        finish();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+            .setCancelable(false)
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                GameView.stopMusic();
+                Intent startMain = new Intent(Intent.ACTION_MAIN);
+                startMain.addCategory(Intent.CATEGORY_HOME);
+                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(startMain);
+                finish();
+                }
+            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                }
+            });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -110,7 +101,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (gameView != null) {
-            int maxLuminosity = 2000;
             float illuminance = event.values[0];
 
             if (illuminance < 10 ) {

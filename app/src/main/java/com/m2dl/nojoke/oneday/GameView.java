@@ -43,43 +43,24 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private final int FORCE_FACTOR = 3; // Increase the values read by the accelerometer
     private float forceOnPlayer;
 
-    //a screenX holder
     int screenX, screenY;
-
-    //context to be used in onTouchEvent to cause the activity transition from GameAvtivity to MainActivity.
     Context context;
-
-    //the score holder
     int score;
-
-    //the high Scores Holder
     int highScore[] = new int[4];
-
-    //Shared Prefernces to store the High Scores
     SharedPreferences sharedPreferences;
 
-    //indicator that the enemy has just entered the game screen
     boolean flag ;
-
-    //an indicator if the game is Over
     private boolean isGameOver ;
 
     private Paint paint;
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
-
     private Bitcoin bitcoin;
-
-    //created a reference of the class Rock
     private Rock[] rocks;
-
-    //defining a boom object to display blast
+    private EarthQuake earthQuake;
     private Boom boom;
 
-    //the mediaplayer objects to configure the background gameon
     static MediaPlayer gameOnsound;
-
-    private EarthQuake earthQuake;
 
     public GameView(Context context, int screenX, int screenY, SensorManager sensorManager) {
         super(context);
@@ -158,43 +139,33 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
         player.update(forceOnPlayer* FORCE_FACTOR);
 
-        //setting boom outside the screen
         boom.setX(-250);
         boom.setY(-250);
 
-        //setting the flag true when the enemy just enters the screen
-        if(bitcoin.getX()==screenX){
-            flag = true;
-        }
+        if(bitcoin.getX()==screenX) flag = true;
 
         bitcoin.update(player.getSpeed());
-                //if collision occurs with player
-                if (Rect.intersects(player.getDetectCollision(), bitcoin.getDetectCollision())) {
+        //if collision occurs with player
+        if (Rect.intersects(player.getDetectCollision(), bitcoin.getDetectCollision())) {
 
-                    // score is increased by 10 points whenever the player hit a bitcoin
-                    score += 10;
-                    //displaying boom at that location
-                    boom.setX(bitcoin.getX());
-                    boom.setY(bitcoin.getY());
+            // score is increased by 10 points whenever the player hit a bitcoin
+            score += 10;
+            //displaying boom at that location
+            boom.setX(bitcoin.getX());
+            boom.setY(bitcoin.getY());
 
-                    bitcoin.setX(-200);
-                }
+            bitcoin.setX(-200);
+        }
 
-        //updating the Rock coordinates
         for(int r = 0; r < NB_ROCKS ; r++) {
             rocks[r].update(player.getSpeed());
-            //checking for a collision between player and a Rock
             if (Rect.intersects(player.getDetectCollision(), rocks[r].getDetectCollision())) {
 
-                //displaying the boom at the collision
                 boom.setX(rocks[r].getX());
                 boom.setY(rocks[r].getY());
-                //setting playing false to stop the game
                 playing = false;
-                //setting the isGameOver true as the game is over
                 isGameOver = true;
 
-                //stopping the gameon gameon
                 gameOnsound.stop();
 
                 //Assigning the scores to the highscore integer array
@@ -206,10 +177,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                         highScore[i] = score;
                         break;
                     }
-
-
                 }
-                //storing the scores through shared Preferences
                 SharedPreferences.Editor e = sharedPreferences.edit();
 
                 for (int i = 0; i < 4; i++) {
@@ -220,36 +188,25 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             }
         }
 
-        if (earthQuake != null) {
-            earthQuake.update();
-        }
+        if (earthQuake != null) earthQuake.update();
 
         if (earthQuake != null && earthQuake.isFinish()) {
             if (player.getState() != State.SAFE) {
                 playing = false;
                 isGameOver = true;
-
-                //stopping the gameon gameon
                 gameOnsound.stop();
 
-                //Assigning the scores to the highscore integer array
                 for (int i = 0; i < 4; i++) {
-
                     if (highScore[i] < score) {
-
                         final int finalI = i;
                         highScore[i] = score;
                         break;
                     }
-
-
                 }
-                //storing the scores through shared Preferences
                 SharedPreferences.Editor e = sharedPreferences.edit();
 
                 for (int i = 0; i < 4; i++) {
-                    int j = i + 1;
-                    e.putInt("score" + j, highScore[i]);
+                    e.putInt("score" + i + 1, highScore[i]);
                 }
                 e.apply();
             }
@@ -260,8 +217,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             canvas = surfaceHolder.lockCanvas();
-
-            // draw background
             canvas.drawBitmap(backgroundBitmap, 0, 0, paint);
 
             if (earthQuake != null && (!earthQuake.isFinish() && player.getState() == State.SAVE_HIM)) {
@@ -282,9 +237,9 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                 bitcoin.getY(),
                 paint);
 
-            //drawing the score on the game screen
+            //drawing score
             paint.setTextSize(35);
-            canvas.drawText("Score : "+score,100,50,paint);
+            canvas.drawText("Score:"+score,100,50,paint);
 
             //drawing boom image
             canvas.drawBitmap(
@@ -340,28 +295,18 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         gameThread.start();
     }
 
-    //stop the gameon on exit
     public static void stopMusic(){
         gameOnsound.stop();
     }
 
-
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        //if the game's over, tappin on game Over screen sends you to MainActivity
         if(isGameOver){
-            if(motionEvent.getAction()== MotionEvent.ACTION_DOWN){
-                context.startActivity(new Intent(context,MainActivity.class));
-            }
+            if(motionEvent.getAction()== MotionEvent.ACTION_DOWN) context.startActivity(new Intent(context,MainActivity.class));
         }
-
         if (earthQuake != null && !earthQuake.isFinish()) {
-            if (player.collide(motionEvent.getX(), motionEvent.getY())) {
-                Log.d("Player", "player is safe");
-                player.setState(State.SAFE);
-            }
+            if (player.collide(motionEvent.getX(), motionEvent.getY())) player.setState(State.SAFE);
         }
-
         return true;
     }
 
@@ -387,11 +332,8 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         int range = 100 - 0 + 1;
         int randomNum = rn.nextInt(range) + 0;
 
-        if (earthQuake == null && randomNum <= 10) {
-            return true;
-        } else {
-            return false;
-        }
+        if (earthQuake == null && randomNum <= 10) return true;
+        else return false;
     }
 
     public short getNbRocks() {
