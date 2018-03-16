@@ -77,14 +77,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     //defining a boom object to display blast
     private Boom boom;
 
-    //the mediaplayer objects to configure the background music
-    static MediaPlayer gameOnsound;
-
-    final MediaPlayer killedEnemysound;
-
-    final MediaPlayer gameOversound;
-    
-
     public GameView(Context context, int screenX, int screenY, SensorManager sensorManager) {
         super(context);
 
@@ -128,15 +120,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
        highScore[2] = sharedPreferences.getInt("score3",0);
        highScore[3] = sharedPreferences.getInt("score4",0);
 
-
-        //initializing the media players for the game sounds
-       gameOnsound = MediaPlayer.create(context,R.raw.gameon);
-        killedEnemysound = MediaPlayer.create(context,R.raw.killedenemy);
-        gameOversound = MediaPlayer.create(context,R.raw.gameover);
-
-        //starting the music to be played across the game
-        gameOnsound.start();
-
     }
 
 
@@ -179,8 +162,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     boom.setX(bitcoin.getX());
                     boom.setY(bitcoin.getY());
 
-                    //playing a sound at the collision between player and the enemy
-                    killedEnemysound.start();
+                    score += 10;
 
                     bitcoin.setX(-200);
                 }
@@ -205,12 +187,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                                 //setting playing false to stop the game.
                                 playing = false;
                                 isGameOver = true;
-
-
-                                //stopping the gameon music
-                                gameOnsound.stop();
-                                //play the game over sound
-                                gameOversound.start();
 
                                 //Assigning the scores to the highscore integer array
                                 for(int i=0;i<4;i++){
@@ -254,13 +230,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     //setting the isGameOver true as the game is over
                     isGameOver = true;
 
-
-
-                    //stopping the gameon music
-                    gameOnsound.stop();
-                    //play the game over sound
-                    gameOversound.start();
-
                 //Assigning the scores to the highscore integer array
                     for(int i=0;i<4;i++){
 
@@ -296,7 +265,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
             //paint.setARGB(this.opacity, 255, 255, 255);
             canvas.drawBitmap(backgroundBitmap, 0, 0, paint);
-
 //            RectF rectF = new RectF();
 //            Paint paintOpacity = new Paint();
 //            paintOpacity.setARGB(this.opacity, 255, 255, 255);
@@ -374,12 +342,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         gameThread = new Thread(this);
         gameThread.start();
     }
-
-    //stop the music on exit
-    public static void stopMusic(){
-        gameOnsound.stop();
-    }
-
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
