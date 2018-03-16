@@ -35,7 +35,6 @@ public class Rock {
         minY = 0;
         Random generator = new Random();
         speed = generator.nextInt(6) + 10;
-        Log.w("speed of rock", String.valueOf(speed));
         y = screenY;
         x = generator.nextInt(maxX) - bitmap.getWidth();
 

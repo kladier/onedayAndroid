@@ -40,7 +40,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private Player player;
     private final int FORCE_FACTOR = 3; // Increase the values read by the accelerometer
     private float forceOnPlayer;
-    private int opacity = 128;
 
     //a screenX holder
     int screenX;
@@ -259,7 +258,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                         e.putInt("score"+j,highScore[i]);
                     }
                     e.apply();
-
                 }
 
         if (earthQuake != null) {
