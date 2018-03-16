@@ -7,7 +7,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -18,11 +23,16 @@ import com.m2dl.nojoke.oneday.entities.Rock;
 import com.m2dl.nojoke.oneday.entities.Player;
 import com.m2dl.nojoke.oneday.entities.Bitcoin;
 
-public class GameView extends SurfaceView implements Runnable {
+public class GameView extends SurfaceView implements Runnable, SensorEventListener {
+
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
 
     volatile boolean playing;
     private Thread gameThread = null;
     private Player player;
+    private final int FORCE_FACTOR = 3; // Increase the values read by the accelerometer
+    private float forceOnPlayer;
 
     //a screenX holder
     int screenX;
@@ -68,11 +78,12 @@ public class GameView extends SurfaceView implements Runnable {
     final MediaPlayer killedEnemysound;
 
     final MediaPlayer gameOversound;
+    
 
-
-
-    public GameView(Context context, int screenX, int screenY) {
+    public GameView(Context context, int screenX, int screenY, SensorManager sensorManager) {
         super(context);
+
+        setUpSensors(sensorManager);
         player = new Player(context, screenX, screenY);
 
         surfaceHolder = getHolder();
@@ -145,7 +156,7 @@ public class GameView extends SurfaceView implements Runnable {
         //incrementing score as time passes
         score++;
 
-        player.update();
+        player.update(forceOnPlayer* FORCE_FACTOR);
 
         //setting boom outside the screen
         boom.setX(-250);
@@ -374,26 +385,12 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-
-
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_UP:
-                player.stopBoosting();
-                break;
-            case MotionEvent.ACTION_DOWN:
-                player.setBoosting();
-                break;
-
-        }
-//if the game's over, tappin on game Over screen sends you to MainActivity
+        //Tappin on game Over screen to return to the MainActivity
         if(isGameOver){
 
             if(motionEvent.getAction()== MotionEvent.ACTION_DOWN){
-
                 context.startActivity(new Intent(context,MainActivity.class));
-
             }
-
         }
 
         return true;
@@ -401,7 +398,20 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        forceOnPlayer = event.values[0]; // get X acceleration
+    }
 
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Don't care
+    }
 
+    private void setUpSensors(SensorManager sensorManager) {
+        this.sensorManager = sensorManager;
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
+    }
 }
 

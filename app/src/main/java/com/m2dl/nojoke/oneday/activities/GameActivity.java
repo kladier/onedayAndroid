@@ -1,11 +1,17 @@
 package com.m2dl.nojoke.oneday.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceView;
@@ -37,12 +43,12 @@ public class GameActivity extends AppCompatActivity {
 
         LinearLayout gameWidgetsLayout = new LinearLayout(this);
         gameWidgetsLayout.setMinimumHeight(size.y);
-        gameWidgetsLayout.addView(gameWidgets.getMoveLeftBtn());
-        gameWidgetsLayout.addView(gameWidgets.getMoveRightBtn());
 
         //Initializing game view object
         //this time we are also passing the screen size to the GameView constructor
-        gameView = new GameView(this, size.x, size.y);
+
+        SensorManager senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        gameView = new GameView(this, size.x, size.y, senSensorManager);
 
         FrameLayout game = new FrameLayout(this);
 
@@ -89,7 +95,4 @@ public class GameActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
-
-
-
 }
