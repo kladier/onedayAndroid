@@ -72,7 +72,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private Bitcoin bitcoin;
 
     //created a reference of the class Rock
-    private Rock Rock;
+    private Rock[] rocks;
 
     //defining a boom object to display blast
     private Boom boom;
@@ -102,7 +102,11 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         boom = new Boom(context);
 
         //initializing the Rock class object
-        Rock = new Rock(context, screenX, screenY);
+        rocks = new Rock[3];
+
+        for(int i = 0; i < 3 ; i++) {
+            rocks[i] = new Rock(context, screenX, screenY);
+        }
 
         //setting the score to 0 initially
         score = 0;
@@ -142,8 +146,8 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         }
     }
 
-    public Rock getRock() {
-        return this.Rock;
+    public Rock getRock(int i ) {
+        return this.rocks[i];
     }
 
     public Bitcoin getBitcoin() {
@@ -183,44 +187,45 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
 
         //updating the Rock coordinates
-        Rock.update(player.getSpeed());
-                //checking for a collision between player and a Rock
-                if(Rect.intersects(player.getDetectCollision(), Rock.getDetectCollision())){
+        for(int r = 0; r < 3 ; r++) {
+            rocks[r].update(player.getSpeed());
+            //checking for a collision between player and a Rock
+            if (Rect.intersects(player.getDetectCollision(), rocks[r].getDetectCollision())) {
 
-                    //displaying the boom at the collision
-                    boom.setX(Rock.getX());
-                    boom.setY(Rock.getY());
-                    //setting playing false to stop the game
-                    playing = false;
-                    //setting the isGameOver true as the game is over
-                    isGameOver = true;
+                //displaying the boom at the collision
+                boom.setX(rocks[r].getX());
+                boom.setY(rocks[r].getY());
+                //setting playing false to stop the game
+                playing = false;
+                //setting the isGameOver true as the game is over
+                isGameOver = true;
 
 
-
-                    //stopping the gameon gameon
-                    gameOnsound.stop();
+                //stopping the gameon gameon
+                gameOnsound.stop();
 
                 //Assigning the scores to the highscore integer array
-                    for(int i=0;i<4;i++){
+                for (int i = 0; i < 4; i++) {
 
-                        if(highScore[i]<score){
+                    if (highScore[i] < score) {
 
-                            final int finalI = i;
-                            highScore[i] = score;
-                            break;
-                        }
-
-
+                        final int finalI = i;
+                        highScore[i] = score;
+                        break;
                     }
-                    //storing the scores through shared Preferences
-                    SharedPreferences.Editor e = sharedPreferences.edit();
 
-                    for(int i=0;i<4;i++){
-                        int j = i+1;
-                        e.putInt("score"+j,highScore[i]);
-                    }
-                    e.apply();
+
                 }
+                //storing the scores through shared Preferences
+                SharedPreferences.Editor e = sharedPreferences.edit();
+
+                for (int i = 0; i < 4; i++) {
+                    int j = i + 1;
+                    e.putInt("score" + j, highScore[i]);
+                }
+                e.apply();
+            }
+        }
 
         if (earthQuake != null) {
             earthQuake.update();
@@ -297,13 +302,15 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             );
 
             //drawing friends image
-            canvas.drawBitmap(
-                    Rock.getBitmap(),
-                    Rock.getX(),
-                    Rock.getY(),
-                    paint
-            );
-
+            for( int i = 0; i <3 ; i++) {
+                Rock rock = rocks[i];
+                canvas.drawBitmap(
+                        rock.getBitmap(),
+                        rock.getX(),
+                        rock.getY(),
+                        paint
+                );
+            }
 
             //draw game Over when the game is over
             if(isGameOver){

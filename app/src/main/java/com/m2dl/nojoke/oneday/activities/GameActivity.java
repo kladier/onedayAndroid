@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.m2dl.nojoke.oneday.GameView;
 import com.m2dl.nojoke.oneday.R;
+import com.m2dl.nojoke.oneday.entities.Rock;
 import com.m2dl.nojoke.oneday.widgets.GameWidgets;
 
 public class GameActivity extends AppCompatActivity implements SensorEventListener{
@@ -113,7 +114,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             float illuminance = event.values[0];
 
             if (illuminance < 10 ) {
-                this.gameView.getRock().speed = this.gameView.getRock().speed+5;
+                for(int i = 0; i < 3; i++) {
+                    gameView.getRock(i).speed += 5;
+                }
             }
             else if (illuminance > 1000) {
                 this.gameView.getBitcoin().speed = this.gameView.getBitcoin().speed+5;
