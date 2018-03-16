@@ -37,12 +37,8 @@ public class Player {
         detectCollision.top = y;
         detectCollision.right = x + bitmap.getWidth();
         detectCollision.bottom = y + bitmap.getHeight();
-
     }
 
-    /**
-     * Avoid to go out of the screen
-     */
     public void checkOutOfScreen() {
         if (x < 0) {
             x = 0;
@@ -57,11 +53,9 @@ public class Player {
             && y >= this.y && y < this.y + this.bitmap.getHeight()) {
             return true;
         }
-
         return false;
     }
 
-    //one more getter for getting the rect object
     public Rect getDetectCollision() {
         return detectCollision;
     }

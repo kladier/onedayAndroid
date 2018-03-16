@@ -8,28 +8,18 @@ import com.m2dl.nojoke.oneday.R;
 
 public class Boom {
 
-    //bitmap object
     private Bitmap bitmap;
 
-    //coordinate variables
     private int x;
     private int y;
 
-    //constructor
     public Boom(Context context) {
-        //getting boom image from drawable resource
-        bitmap = BitmapFactory.decodeResource
-                (context.getResources(), R.drawable.boom);
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.boom);
 
-        //setting the coordinate outside the screen
-        //so that it won't shown up in the screen
-        //it will be only visible for a fraction of second
-        //after collission
         x = -150;
         y = -150;
     }
 
-    //setters for x and y to make it visible at the place of collision
     public void setX(int x) {
         this.x = x;
     }
@@ -38,7 +28,6 @@ public class Boom {
         this.y = y;
     }
 
-    //getters
     public Bitmap getBitmap() {
         return bitmap;
     }

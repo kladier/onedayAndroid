@@ -25,7 +25,6 @@ public class Bitcoin {
     Context context;
     Activity activity;
 
-    //creating a rect object
     private Rect detectCollision;
 
     public Bitcoin(Context context, int screenX, int screenY) {
@@ -44,7 +43,6 @@ public class Bitcoin {
         x = generator.nextInt(maxX) - bitmap.getWidth();
         if (x < 0 ) x = 0;
 
-        //initializing rect object
         detectCollision = new Rect(x, y, bitmap.getWidth(), bitmap.getHeight());
     }
 
@@ -59,7 +57,6 @@ public class Bitcoin {
             if (x < 0 ) x = 0;
         }
 
-        //Adding the top, left, bottom and right to the rect object
         detectCollision.left = x;
         detectCollision.top = y;
         detectCollision.right = x + bitmap.getWidth();
@@ -85,9 +82,6 @@ public class Bitcoin {
     public int getY() {
         return y;
     }
-
-
-
 
     public int getSpeed() {
         return speed;

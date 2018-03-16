@@ -12,12 +12,10 @@ public class GameWidgets {
         moveLeftBtn = new Button(ctx);
         moveRightBtn = new Button(ctx);
 
-
         moveLeftBtn.setWidth(300);
         moveLeftBtn.setHeight(60);
         moveLeftBtn.setText("LEFT");
         moveLeftBtn.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL);
-        //moveLeftBtn.setY(screenY - moveLeftBtn.getHeight() - 10);
 
         moveRightBtn.setWidth(300);
         moveRightBtn.setHeight(60);

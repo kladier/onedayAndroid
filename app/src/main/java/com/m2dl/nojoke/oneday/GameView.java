@@ -69,48 +69,32 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
         setUpSensors(sensorManager);
         player = new Player(context, screenX, screenY);
-
         surfaceHolder = getHolder();
         paint = new Paint();
 
-        //initializing context
         this.context = context;
-
         bitcoin = new Bitcoin(context,screenX,screenY);
-
-        //initializing boom object
         boom = new Boom(context);
-
-        //initializing the Rock class object
         rocks = new Rock[NB_ROCKS];
 
         for(int i = 0; i < NB_ROCKS ; i++) {
             rocks[i] = new Rock(context, screenX, screenY);
         }
 
-        //setting the score to 0 initially
         score = 0;
         this.screenX = screenX;
-
         isGameOver = false;
-
         this.screenY = screenY;
 
-        //initializing shared Preferences
         sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME", Context.MODE_PRIVATE);
 
-        //initializing the array high scores with the previous values
-       highScore[0] = sharedPreferences.getInt("score1",0);
-       highScore[1] = sharedPreferences.getInt("score2",0);
-       highScore[2] = sharedPreferences.getInt("score3",0);
-       highScore[3] = sharedPreferences.getInt("score4",0);
+        highScore[0] = sharedPreferences.getInt("score1",0);
+        highScore[1] = sharedPreferences.getInt("score2",0);
+        highScore[2] = sharedPreferences.getInt("score3",0);
+        highScore[3] = sharedPreferences.getInt("score4",0);
 
-        //initializing the media players for the game sounds
-       gameOnsound = MediaPlayer.create(context,R.raw.gameon);
-
-        //starting the gameon to be played across the game
+        gameOnsound = MediaPlayer.create(context,R.raw.gameon);
         gameOnsound.start();
-
     }
 
     @Override
